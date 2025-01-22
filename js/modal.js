@@ -1,34 +1,30 @@
-const modalRefs = {
-    openModalBtn: document.querySelector('[data-action="open-modal"]'),
-    closeModalBtn: document.querySelector('[data-action="close-modal"]'),
-    backdrop: document.querySelector('.js-backdrop'),
-  };
-  
-  modalRefs.openModalBtn.addEventListener('click', onModalOpen);
-  modalRefs.closeModalBtn.addEventListener('click', onCloseModal);
-  modalRefs.backdrop.addEventListener('click', onBackdropClick);
-  
-  function onModalOpen() {
-    window.addEventListener('keydown', onEscPress);
-    document.body.classList.add('show-modal');
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".open-frame-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const modal = btn.closest(".features-list__item").querySelector(".backdrop");
+      if (modal) {
+        modal.classList.add("show-modal");
+        document.body.classList.add("modal-open");
+      }
+    });
+  });
+
+  document.querySelectorAll(".backdrop").forEach((backdrop) => {
+    backdrop.addEventListener("click", (event) => {
+      if (event.target === backdrop || event.target.closest(".button")) {
+        closeModal(backdrop);
+      }
+    });
+  });
+
+  function closeModal(modal) {
+    modal.classList.remove("show-modal");
+    document.body.classList.remove("modal-open");
   }
-  
-  function onCloseModal() {
-    window.removeEventListener('keydown', onEscPress);
-    document.body.classList.remove('show-modal');
-  }
-  
-  function onBackdropClick(e) {
-    if (e.currentTarget === e.target) {
-      onCloseModal();
+
+  document.addEventListener("keydown", (event) => {
+    if (event.code === "Escape") {
+      document.querySelectorAll(".backdrop.show-modal").forEach(closeModal);
     }
-  }
-  
-  function onEscPress(e) {
-    const ESC_KEY = 'Escape';
-    const isEscKey = e.code === ESC_KEY;
-  
-    if (isEscKey) {
-      onCloseModal();
-    }
-  }
+  });
+});
